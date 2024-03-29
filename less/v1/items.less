@@ -254,7 +254,7 @@
       .form-fields {
         flex-wrap: nowrap;
       }
-      &.consumption input {
+      &.consumption [name="system.consume.amount"] {
         flex: 0 0 32px;
       }
       span {
@@ -545,6 +545,8 @@
 /* ----------------------------------------- */
 
 .dnd5e.summoning-config {
+  max-block-size: 90vh;
+
   .unbutton {
     width: unset;
     border: none;
@@ -595,5 +597,9 @@
       border-radius: 4px;
       padding-inline: 4px;
     }
+  }
+
+  multi-select .tags .tag {
+    cursor: pointer;
   }
 }

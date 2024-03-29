@@ -1378,7 +1378,8 @@ DND5E.validProperties = {
   ]),
   equipment: new Set([
     "concentration",
-    "mgc"
+    "mgc",
+    "stealthDisadvantage"
   ]),
   feat: new Set([
     "concentration",
@@ -1566,7 +1567,7 @@ DND5E.damageTypes = {
   },
   necrotic: {
     label: "DND5E.DamageNecrotic",
-    icon: "systems/dnd5e/icons/svg/damage/acid.svg",
+    icon: "systems/dnd5e/icons/svg/damage/necrotic.svg",
     reference: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.klOVUV5G1U7iaKoG"
   },
   piercing: {
@@ -1977,6 +1978,7 @@ DND5E.pactCastingProgression = {
  * @property {boolean} [upcast]       Whether this preparation mode allows for upcasting.
  * @property {boolean} [cantrips]     Whether this mode allows for cantrips in a spellbook.
  * @property {number} [order]         The sort order of this mode in a spellbook.
+ * @property {boolean} [prepares]     Whether this preparation mode prepares spells.
  */
 
 /**
@@ -1986,7 +1988,8 @@ DND5E.pactCastingProgression = {
 DND5E.spellPreparationModes = {
   prepared: {
     label: "DND5E.SpellPrepPrepared",
-    upcast: true
+    upcast: true,
+    prepares: true
   },
   pact: {
     label: "DND5E.PactMagic",
@@ -1996,14 +1999,19 @@ DND5E.spellPreparationModes = {
   },
   always: {
     label: "DND5E.SpellPrepAlways",
-    upcast: true
+    upcast: true,
+    prepares: true
   },
   atwill: {
     label: "DND5E.SpellPrepAtWill",
-    order: -20
+    order: -30
   },
   innate: {
     label: "DND5E.SpellPrepInnate",
+    order: -20
+  },
+  ritual: {
+    label: "DND5E.SpellPrepRitual",
     order: -10
   }
 };
@@ -2261,7 +2269,7 @@ patchConfig("spellSchools", "label", { since: "DnD5e 3.0", until: "DnD5e 3.2" })
 /* -------------------------------------------- */
 
 /**
- * Spell scroll item ID within the `DND5E.sourcePacks` compendium for each level.
+ * Spell scroll item ID within the `DND5E.sourcePacks` compendium or a full UUID for each spell level.
  * @enum {string}
  */
 DND5E.spellScrollIds = {
@@ -3355,6 +3363,7 @@ DND5E.rules = {
   consumables: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.UEPAcZFzQ5x196zE",
   itemspells: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.DABoaeeF6w31UCsj",
   charges: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.NLRXcgrpRCfsA5mO",
+  spellscroll: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.gi8IKhtOlBVhMJrN",
   creaturetags: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.9jV1fFF163dr68vd",
   telepathy: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.geTidcFIYWuUvD2L",
   legendaryactions: "Compendium.dnd5e.rules.JournalEntry.NizgRXLNUqtdlC1s.JournalEntryPage.C1awOyZh78pq1xmY",

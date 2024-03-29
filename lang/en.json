@@ -857,6 +857,7 @@
 "DND5E.Hair": "Hair",
 "DND5E.HalfProficient": "Half Proficient",
 "DND5E.Healing": "Healing",
+"DND5E.HealingRoll": "Healing Roll",
 "DND5E.HealingTemp": "Healing (Temporary)",
 "DND5E.Height": "Height",
 "DND5E.HitPoints": "Hit Points",
@@ -1214,8 +1215,18 @@
 "DND5E.NewDayHint": "Recover limited use abilities which recharge \"per day\"?",
 "DND5E.SaveBonus": "Saving Throw Bonus",
 "DND5E.SaveGlobalBonusHint": "This bonus applies to all saving throws made by this actor.",
-"DND5E.ScrollDetails": "Scroll Details",
-"DND5E.ScrollRequiresConcentration": "Requires Concentration",
+"DND5E.Scroll": {
+  "CreateFrom": "Create Scroll from {spell}",
+  "CreateScroll": "Create Scroll",
+  "Details": "Scroll Details",
+  "Explanation": {
+    "Label": "Explanation",
+    "Hint": "Amount of the rules on using spell scrolls to include in the created scroll.",
+    "Complete": "Complete",
+    "Reference": "Reference"
+  },
+  "RequiresConcentration": "Requires Concentration"
+},
 "DND5E.Senses": "Senses",
 "DND5E.SensesConfig": "Configure Senses",
 "DND5E.SensesConfigHint": "Configure any special sensory perception abilities that this actor possesses.",
@@ -1381,6 +1392,7 @@
 "DND5E.SpellNone": "None",
 "DND5E.SpellPrepAtWill": "At-Will",
 "DND5E.SpellPrepInnate": "Innate Spellcasting",
+"DND5E.SpellPrepRitual": "Ritual Only",
 "DND5E.SpellPrepPrepared": "Prepared",
 "DND5E.SpellPrepAlways": "Always Prepared",
 "DND5E.SpellPreparation": "Spell Preparation",
@@ -1485,6 +1497,10 @@
   "CreatureChanges": {
     "Label": "Creature Changes",
     "Hint": "Changes that will be made to the creature being summoned. Any @ references used in the following formulas will be based on the summoner's stats."
+  },
+  "CreatureTypes": {
+    "Label": "Creature Types",
+    "Hint": "Summoned creature will be changed to this type. If more than one type is selected, then player will be able to choose from these types when summoning."
   },
   "DisplayName": "Display Name",
   "DropHint": "Drop creature here",
