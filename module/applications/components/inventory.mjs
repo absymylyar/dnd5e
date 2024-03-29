@@ -2,7 +2,6 @@ import Item5e from "../../documents/item.mjs";
 import {parseInputDelta} from "../../utils.mjs";
 import CurrencyManager from "../currency-manager.mjs";
 import ContextMenu5e from "../context-menu.mjs";
-import Item5e from "../../documents/item.mjs";
 
 /**
  * Custom element that handles displaying actor & container inventories.
