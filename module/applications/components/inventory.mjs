@@ -383,7 +383,8 @@ export default class InventoryElement extends HTMLElement {
       case "favorite":
         return this.actor.system.addFavorite({type: "item", id: item.getRelativeUUID(this.actor)});
       case "prepare":
-        return item.update({"system.preparation.prepared": !item.system.preparation?.prepared});
+        return this._prepareSpell(item);
+        //return item.update({"system.preparation.prepared": !item.system.preparation?.prepared});
       case "recharge":
         return item.rollRecharge();
       case "unfavorite":
@@ -391,6 +392,25 @@ export default class InventoryElement extends HTMLElement {
       case "use":
         return item.use({}, { event });
     }
+  }
+
+  /* -------------------------------------------- */
+  /**
+   * Manage spell preparation.
+   * @param {Item5e} item
+   * @returns {Promise}
+   */
+  async _prepareSpell(item) {
+    const spellClass = this.actor.classes[item.system.linkedClass];
+    if (!item.system.preparation?.prepared
+      && spellClass
+      && spellClass.system.spellcasting.preparedSpellsCount + 1 > spellClass.system.spellcasting.preparedSpellsLimit) {
+      ui.notifications.warn(
+        game.i18n.format("DND5E.SpellPreparationLimitWarning", { limit: spellClass.system.spellcasting.preparedSpellsLimit, class: spellClass.name })
+      );
+      return;
+    }
+    return await item.update({"system.preparation.prepared": !item.system.preparation?.prepared});
   }
 
   /* -------------------------------------------- */
