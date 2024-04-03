@@ -16,6 +16,6 @@ export const config = {
   class: ClassJournalPageData,
   map: MapLocationJournalPageData,
   rule: RuleJournalPageData,
-  spellList: SpellListJournalPageData,
+  spells: SpellListJournalPageData,
   subclass: SubclassJournalPageData
 };
