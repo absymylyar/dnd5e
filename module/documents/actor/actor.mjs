@@ -48,6 +48,30 @@ export default class Actor5e extends SystemDocumentMixin(Actor) {
   /* -------------------------------------------- */
 
   /**
+   * Get all origins which have spellcasting ability.
+   * @type {Array<Item5e>}
+   */
+  get spellCastingClasses() {
+    return Object.values(this.classes).filter(({system}) => system.spellcasting
+    && system.spellcasting.progression !== "none" );
+  }
+
+  /**
+   * Get the actual active spell casting class.
+   * @type {Item5e}
+   */
+  get activeSpellCastingClass() {
+    if (this.system.attributes.activeSpellcastingClass
+      && this.classes[this.system.attributes.activeSpellcastingClass]) {
+      return this.classes[this.system.attributes.activeSpellcastingClass];
+    }
+    return Object.values(this.classes).find(({system}) => system.spellcasting
+    && system.spellcasting.progression !== "none" );
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Is this Actor currently polymorphed into some other creature?
    * @type {boolean}
    */
