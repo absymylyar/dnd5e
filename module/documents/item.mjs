@@ -353,10 +353,10 @@ export default class Item5e extends SystemDocumentMixin(Item) {
     return this.system?.preparation?.mode === "innate"
     || this.parent.activeSpellCastingClass?.system?.identifier === this.system.sourceClass;
   }
-  
+
   /* -------------------------------------------- */
-  
-   * Spellcasting details for a class or subclass.
+
+  /** Spellcasting details for a class or subclass.
    *
    * @typedef {object} SpellcastingDescription
    * @property {string} type              Spellcasting type as defined in ``CONFIG.DND5E.spellcastingTypes`.
