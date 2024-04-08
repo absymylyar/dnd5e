@@ -13,6 +13,19 @@ export function registerSystemSettings() {
     default: ""
   });
 
+  game.packs.filter(x=> x.documentName === "JournalEntry")
+
+  // Spell-list compendiums
+  game.settings.register("dnd5e", "spellListCompendiums", {
+    name: "SETTINGS.5eSpellListCompendimum.Name",
+    hint: "SETTINGS.5eSpellListCompendimum.Hint",
+    scope: "world",
+    config: true,
+    default: [],
+    type: Array,
+    choices: 
+  });
+
   // Challenge visibility
   game.settings.register("dnd5e", "challengeVisibility", {
     name: "SETTINGS.5eChallengeVisibility.Name",
