@@ -13,8 +13,11 @@ export function registerSystemSettings() {
     default: ""
   });
 
-  game.packs.filter(x=> x.documentName === "JournalEntry")
-
+  const toto = game.packs.filter(x => x.documentName === "JournalEntry")
+    .reduce((obj, [identifier, cls]) => {
+      if ( cls.spellcasting && (cls.spellcasting.progression !== "none") ) obj[identifier] = cls;
+      return obj;
+    }, {});
   // Spell-list compendiums
   game.settings.register("dnd5e", "spellListCompendiums", {
     name: "SETTINGS.5eSpellListCompendimum.Name",
@@ -23,7 +26,7 @@ export function registerSystemSettings() {
     config: true,
     default: [],
     type: Array,
-    choices: 
+    choices: toto
   });
 
   // Challenge visibility
