@@ -13,22 +13,6 @@ export function registerSystemSettings() {
     default: ""
   });
 
-  const toto = game.packs.filter(x => x.documentName === "JournalEntry")
-    .reduce((obj, [identifier, cls]) => {
-      if ( cls.spellcasting && (cls.spellcasting.progression !== "none") ) obj[identifier] = cls;
-      return obj;
-    }, {});
-  // Spell-list compendiums
-  game.settings.register("dnd5e", "spellListCompendiums", {
-    name: "SETTINGS.5eSpellListCompendimum.Name",
-    hint: "SETTINGS.5eSpellListCompendimum.Hint",
-    scope: "world",
-    config: true,
-    default: [],
-    type: Array,
-    choices: toto
-  });
-
   // Challenge visibility
   game.settings.register("dnd5e", "challengeVisibility", {
     name: "SETTINGS.5eChallengeVisibility.Name",

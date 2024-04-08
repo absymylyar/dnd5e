@@ -391,6 +391,21 @@ Hooks.once("ready", function() {
     }
   });
 
+  // Spell-list compendiums
+  game.settings.register("dnd5e", "spellListCompendiums", {
+    name: "SETTINGS.5eSpellListCompendimum.Name",
+    hint: "SETTINGS.5eSpellListCompendimum.Hint",
+    scope: "world",
+    config: true,
+    default: [],
+    type: Array,
+    choices: game.packs.filter(x => x.documentName === "JournalEntry")
+      .reduce((p, c) => {
+        p[c.metadata.id] = c.metadata.label;
+        return p;
+      }, {})
+  });
+
   // Determine whether a system migration is required and feasible
   if ( !game.user.isGM ) return;
   const cv = game.settings.get("dnd5e", "systemMigrationVersion") || game.world.flags.dnd5e?.version;
