@@ -1,4 +1,4 @@
-import HitDice from "../../documents/actor/HitDice.mjs";
+import HitDice from "../../documents/actor/hit-dice.mjs";
 import Proficiency from "../../documents/actor/proficiency.mjs";
 import { simplifyBonus } from "../../utils.mjs";
 import { FormulaField, LocalDocumentField } from "../fields.mjs";
@@ -175,10 +175,7 @@ export default class CharacterData extends CreatureTemplate {
     this.attributes.attunement.value = 0;
 
     for ( const item of this.parent.items ) {
-      // Attuned items
-      if ( item.system.attunement === CONFIG.DND5E.attunementTypes.ATTUNED ) {
-        this.attributes.attunement.value += 1;
-      }
+      if ( item.system.attuned ) this.attributes.attunement.value += 1;
     }
 
     // Character proficiency bonus
@@ -192,7 +189,7 @@ export default class CharacterData extends CreatureTemplate {
     else {
       const required = xp.max - xp.min;
       const pct = Math.round((xp.value - xp.min) * 100 / required);
-      xp.pct = Math.clamped(pct, 0, 100);
+      xp.pct = Math.clamp(pct, 0, 100);
     }
 
     AttributesFields.prepareBaseArmorClass.call(this);
@@ -243,19 +240,6 @@ export default class CharacterData extends CreatureTemplate {
 
   /* -------------------------------------------- */
   /*  Helpers                                     */
-  /* -------------------------------------------- */
-
-  /** @inheritdoc */
-  getRollData({ deterministic=false }={}) {
-    const data = super.getRollData({ deterministic });
-    data.classes = {};
-    for ( const [identifier, cls] of Object.entries(this.parent.classes) ) {
-      data.classes[identifier] = {...cls.system};
-      if ( cls.subclass ) data.classes[identifier].subclass = cls.subclass.system;
-    }
-    return data;
-  }
-
   /* -------------------------------------------- */
 
   /**

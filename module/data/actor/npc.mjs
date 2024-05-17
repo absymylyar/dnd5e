@@ -228,7 +228,7 @@ export default class NPCData extends CreatureTemplate {
 
     // Determine hit dice denomination & max from hit points formula
     const [, max, denomination] = this.attributes.hp.formula?.match(/(\d*)d(\d+)/i) ?? [];
-    this.attributes.hd.max = Number(max ?? 1);
+    this.attributes.hd.max = Number(max ?? 0);
     this.attributes.hd.denomination = Number(denomination ?? CONFIG.DND5E.actorSizes[this.traits.size]?.hitDie ?? 4);
 
     for ( const item of this.parent.items ) {
@@ -240,9 +240,7 @@ export default class NPCData extends CreatureTemplate {
       }
 
       // Attuned items
-      else if ( item.system.attunement === CONFIG.DND5E.attunementTypes.ATTUNED ) {
-        this.attributes.attunement.value += 1;
-      }
+      else if ( item.system.attuned ) this.attributes.attunement.value += 1;
     }
 
     // Kill Experience

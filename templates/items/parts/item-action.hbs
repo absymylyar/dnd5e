@@ -2,7 +2,7 @@
 <div class="form-group select">
     <label>{{ localize "DND5E.ItemActionType" }}</label>
     <select name="system.actionType">
-        {{selectOptions config.itemActionTypes selected=system.actionType blank=""}}
+        {{ selectOptions config.itemActionTypes selected=system.actionType blank="" }}
     </select>
 </div>
 {{#if system.actionType}}
@@ -119,6 +119,36 @@
         </select>
     </div>
 </div>
+
+{{!-- Enchantment --}}
+{{#if system.isEnchantment}}
+<div class="form-group enchantment">
+    <label>{{ localize "DND5E.Enchantment.Label" }}</label>
+    <div class="form-fields">
+        <a class="config-button" data-action="enchantment">
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+            {{ localize "DND5E.Enchantment.Action.Configure" }}
+        </a>
+    </div>
+</div>
+
+<div class="form-group enchanted-items">
+    <label>{{ localize "DND5E.Enchantment.Items.Label" }}</label>
+    <ul>
+        {{#each enchantedItems}}
+        <li>
+            {{#if actor}}
+            {{ localize "DND5E.Enchantment.Items.Entry" item=_source.name actor=actor.name }}
+            {{else}}
+            {{ _source.name }}
+            {{/if}}
+        </li>
+        {{else}}
+        <li>{{ localize "DND5E.Enchantment.Items.None" }}</li>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
 
 {{!-- Summoning --}}
 {{#if (eq system.actionType "summ")}}
