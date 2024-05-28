@@ -21,7 +21,17 @@ export default class ActiveEffect5e extends ActiveEffect {
    * Additional key paths to properties added during base data preparation that should be treated as formula fields.
    * @type {Set<string>}
    */
-  static FORMULA_FIELDS = new Set(["system.attributes.ac.bonus"]);
+  static FORMULA_FIELDS = new Set([
+    "system.attributes.ac.bonus",
+    "system.attributes.encumbrance.bonuses.encumbered",
+    "system.attributes.encumbrance.bonuses.heavilyEncumbered",
+    "system.attributes.encumbrance.bonuses.maximum",
+    "system.attributes.encumbrance.bonuses.overall",
+    "system.attributes.encumbrance.multipliers.encumbered",
+    "system.attributes.encumbrance.multipliers.heavilyEncumbered",
+    "system.attributes.encumbrance.multipliers.maximum",
+    "system.attributes.encumbrance.multipliers.overall"
+  ]);
 
   /* -------------------------------------------- */
 
@@ -31,7 +41,6 @@ export default class ActiveEffect5e extends ActiveEffect {
    */
   get isAppliedEnchantment() {
     return (this.getFlag("dnd5e", "type") === "enchantment")
-      && (this.parent.system.metadata?.enchantable === true)
       && !!this.origin && (this.origin !== this.parent.uuid);
   }
 
@@ -398,7 +407,9 @@ export default class ActiveEffect5e extends ActiveEffect {
    */
   async createRiderEnchantments() {
     const origin = await fromUuid(this.origin);
-    const riders = (this.getFlag("dnd5e", "enchantment.riders") ?? []).map(id => {
+
+    // Create Effects
+    const riderEffects = (this.getFlag("dnd5e", "enchantment.riders.effect") ?? []).map(id => {
       const effectData = origin.effects.get(id)?.toObject();
       if ( effectData ) {
         delete effectData._id;
@@ -406,9 +417,24 @@ export default class ActiveEffect5e extends ActiveEffect {
         effectData.origin = this.origin;
       }
       return effectData;
-    }).filter(e => e);
-    const created = await this.parent.createEmbeddedDocuments("ActiveEffect", riders);
-    if ( created.length ) this.addDependent(...created);
+    });
+    const createdEffects = await this.parent.createEmbeddedDocuments("ActiveEffect", riderEffects.filter(e => e));
+
+    // Create Items
+    let createdItems = [];
+    if ( this.parent.isEmbedded ) {
+      const riderItems = await Promise.all((this.getFlag("dnd5e", "enchantment.riders.item") ?? []).map(async uuid => {
+        const itemData = (await fromUuid(uuid))?.toObject();
+        if ( itemData ) {
+          delete itemData._id;
+          foundry.utils.setProperty(itemData, "flags.dnd5e.enchantment", { origin: this.uuid });
+        }
+        return itemData;
+      }));
+      createdItems = await this.parent.actor.createEmbeddedDocuments("Item", riderItems.filter(i => i));
+    }
+
+    if ( createdEffects.length || createdItems.length ) this.addDependent(...createdEffects, ...createdItems);
   }
 
   /* -------------------------------------------- */
@@ -503,10 +529,8 @@ export default class ActiveEffect5e extends ActiveEffect {
     super._onDelete(options, userId);
     if ( game.user === game.users.activeGM ) this.getDependents().forEach(e => e.delete());
     if ( this.isAppliedEnchantment ) EnchantmentData.untrackEnchantment(this.origin, this.uuid);
-    if ( options.chatMessageOrigin ) {
-      document.body.querySelectorAll(`[data-message-id="${options.chatMessageOrigin}"] enchantment-application`)
-        .forEach(element => element.buildItemList());
-    }
+    document.body.querySelectorAll(`enchantment-application:has([data-enchantment-uuid="${this.uuid}"]`)
+      .forEach(element => element.buildItemList());
   }
 
   /* -------------------------------------------- */
@@ -706,7 +730,7 @@ export default class ActiveEffect5e extends ActiveEffect {
 
   /**
    * Retrieve a list of dependent effects.
-   * @returns {ActiveEffect5e[]}
+   * @returns {Array<ActiveEffect5e|Item5e>}
    */
   getDependents() {
     return (this.getFlag("dnd5e", "dependents") || []).reduce((arr, { uuid }) => {

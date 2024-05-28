@@ -18,6 +18,10 @@ export function registerCustomEnrichers() {
     enricher: enrichString
   },
   {
+    pattern: /\[\[(?<type>lookup) (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
+    enricher: enrichString
+  },
+  {
     pattern: /&(?<type>Reference)\[(?<config>[^\]]+)](?:{(?<label>[^}]+)})?/gi,
     enricher: enrichString
   },
@@ -366,7 +370,7 @@ async function enrichDamage(config, label, options) {
     if ( config.average === true ) {
       const minRoll = Roll.create(config.formula).evaluate({ minimize: true, async: true });
       const maxRoll = Roll.create(config.formula).evaluate({ maximize: true, async: true });
-      localizationData.average = Math.floor((await minRoll.total + await maxRoll.total) / 2);
+      localizationData.average = Math.floor(((await minRoll).total + (await maxRoll).total) / 2);
     } else if ( Number.isNumeric(config.average) ) {
       localizationData.average = config.average;
     }
@@ -414,6 +418,7 @@ async function enrichEmbed(config, label, options) {
     switch ( config.doc.type ) {
       case "image": return embedImagePage(config, label, options);
       case "text":
+      case "map":
       case "rule": return embedTextPage(config, label, options);
       case "spells": return embedSpellList(config, label, options);
     }

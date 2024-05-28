@@ -133,7 +133,12 @@ export default class ItemSheet5e extends ItemSheet {
       advancement: this._getItemAdvancement(item),
 
       // Enchantment
-      enchantedItems: await item.system.enchantment?.getItems(),
+      appliedEnchantments: item.system.enchantment?.appliedEnchantments?.map(enchantment => ({
+        enchantment,
+        name: enchantment.parent._source.name,
+        actor: enchantment.parent.actor,
+        item: enchantment.parent
+      })),
 
       // Prepare Active Effects
       effects: EffectsElement.prepareCategories(item.effects, { parent: this.item }),
@@ -519,6 +524,7 @@ export default class ItemSheet5e extends ItemSheet {
     if ( this.isEditable ) {
       html.find(".config-button").click(this._onConfigMenu.bind(this));
       html.find(".damage-control").click(this._onDamageControl.bind(this));
+      html.find(".enchantment-button").click(this._onEnchantmentAction.bind(this));
       html.find(".advancement .item-control").click(event => {
         const t = event.currentTarget;
         if ( t.dataset.action ) this._onAdvancementAction(t, t.dataset.action);
@@ -540,6 +546,7 @@ export default class ItemSheet5e extends ItemSheet {
         if ( override === "damage-control" ) html[0].querySelectorAll(".damage-control").forEach(e => e.remove());
       }
     }
+    html[0].querySelectorAll('[data-action="view"]').forEach(e => e.addEventListener("click", this._onView.bind(this)));
 
     // Advancement context menu
     const contextOptions = this._getAdvancementContextMenuOptions();
@@ -654,6 +661,38 @@ export default class ItemSheet5e extends ItemSheet {
       damage.parts.splice(Number(li.dataset.damagePart), 1);
       return this.item.update({"system.damage.parts": damage.parts});
     }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle actions on entries in the enchanted items list.
+   * @param {PointerEvent} event  Triggering click event.
+   * @private
+   */
+  async _onEnchantmentAction(event) {
+    event.preventDefault();
+    const enchantment = fromUuidSync(event.currentTarget.closest("[data-enchantment-uuid]")?.dataset.enchantmentUuid);
+    if ( !enchantment ) return;
+    switch ( event.currentTarget.dataset.action ) {
+      case "removeEnchantment":
+        await enchantment.delete();
+        this.render();
+        break;
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle actions on a view sheet button.
+   * @param {PointerEvent} event  Triggering click event.
+   * @private
+   */
+  async _onView(event) {
+    event.preventDefault();
+    const doc = await fromUuid(event.currentTarget.dataset.uuid);
+    doc?.sheet.render(true);
   }
 
   /* -------------------------------------------- */
