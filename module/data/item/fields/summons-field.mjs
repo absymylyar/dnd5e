@@ -213,6 +213,8 @@ export class SummonsData extends foundry.abstract.DataModel {
       // Figure out where to place the summons
       const placements = await this.getPlacement(actor.prototypeToken, profile, options);
 
+      Hooks.callAll("dnd5e.postSummonPlacement", this.item, profile, placements, options);
+
       for ( const placement of placements ) {
         // Prepare changes to actor data, re-calculating per-token for potentially random values
         const tokenUpdateData = {
