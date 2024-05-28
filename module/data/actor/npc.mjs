@@ -256,6 +256,7 @@ export default class NPCData extends CreatureTemplate {
     }
 
     AttributesFields.prepareBaseArmorClass.call(this);
+    AttributesFields.prepareBaseEncumbrance.call(this);
   }
 
   /* -------------------------------------------- */
@@ -268,6 +269,10 @@ export default class NPCData extends CreatureTemplate {
       AttributesFields.prepareRace.call(this, this.details.race, { force: true });
       this.details.type = this.details.race.system.type;
     }
+    for ( const key of Object.keys(CONFIG.DND5E.movementTypes) ) this.attributes.movement[key] ??= 0;
+    for ( const key of Object.keys(CONFIG.DND5E.senses) ) this.attributes.senses[key] ??= 0;
+    this.attributes.movement.units ??= Object.keys(CONFIG.DND5E.movementUnits)[0];
+    this.attributes.senses.units ??= Object.keys(CONFIG.DND5E.movementUnits)[0];
   }
 
   /* -------------------------------------------- */
@@ -278,6 +283,7 @@ export default class NPCData extends CreatureTemplate {
     const { originalSaves } = this.parent.getOriginalStats();
 
     this.prepareAbilities({ rollData, originalSaves });
+    AttributesFields.prepareEncumbrance.call(this, rollData);
     AttributesFields.prepareExhaustionLevel.call(this);
     AttributesFields.prepareMovement.call(this);
     AttributesFields.prepareConcentration.call(this, rollData);

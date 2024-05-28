@@ -450,10 +450,6 @@ export default class Item5e extends SystemDocumentMixin(Item) {
    */
   applyActiveEffects() {
     const overrides = {};
-    if ( !this.system?.metadata?.enchantable ) {
-      this.overrides = overrides;
-      return;
-    }
 
     // Organize non-disabled effects by their application priority
     const changes = [];
@@ -2872,7 +2868,7 @@ export default class Item5e extends SystemDocumentMixin(Item) {
         desc = [
           "<p><em>",
           CONFIG.DND5E.spellLevels[level] ?? level,
-          "&Reference[Spell Scroll]",
+          " &Reference[Spell Scroll]",
           isConc ? `, ${game.i18n.localize("DND5E.Scroll.RequiresConcentration")}` : null,
           "</em></p>",
           description.value
