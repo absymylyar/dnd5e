@@ -993,8 +993,6 @@ export default class ActorSheet5eCharacter2 extends ActorSheet5eCharacter {
    * @protected
    */
   _onToggleSpellcasting(event) {
-    const ability = event.currentTarget.closest("[data-ability]")?.dataset.ability;
-    this.actor.update({ "system.attributes.spellcasting": ability });
     const sc = event.currentTarget.closest("[data-ability]")?.dataset;
     this.actor.update(
       {
