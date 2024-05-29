@@ -369,14 +369,15 @@ export default class Item5e extends SystemDocumentMixin(Item) {
    * @type {boolean}
    */
   get isActiveSpellCasting() {
-    if (this.type !== "spell" || !this.parent) return;
+    if (this.type !== "spell" || !this.isEmbedded) return;
     return this.system?.preparation?.mode === "innate"
     || this.parent.activeSpellCastingClass?.system?.identifier === this.system.sourceClass;
   }
 
   /* -------------------------------------------- */
 
-  /** Spellcasting details for a class or subclass.
+  /**
+   * Spellcasting details for a class or subclass.
    *
    * @typedef {object} SpellcastingDescription
    * @property {string} type              Spellcasting type as defined in ``CONFIG.DND5E.spellcastingTypes`.
@@ -403,7 +404,7 @@ export default class Item5e extends SystemDocumentMixin(Item) {
     if ( !finalSC ) return null;
     finalSC.levels = this.isEmbedded ? (this.system.levels ?? this.class?.system.levels) : null;
 
-    if (spellcasting.needToPrepare && this.parent
+    if (spellcasting.needToPrepare && this.isEmbedded
       && CONFIG.DND5E.spellcastingTypes.leveled.progression[finalSC.progression]) {
       finalSC.spellPreparationLimit = Math.max(
         1,
@@ -412,12 +413,12 @@ export default class Item5e extends SystemDocumentMixin(Item) {
           this.system.levels / (CONFIG.DND5E.spellcastingTypes.leveled.progression[finalSC.progression].divisor || 1)
         )
       );
-      finalSC.preparedSpellsCount = this.parent.items.filter(x => x.type === "spell"
-      && x.system?.level > 0
-      && x.system?.sourceClass === this.system.identifier
-      && x.system?.preparation?.mode === "prepared"
-      && x.system?.preparation?.prepared).length;
     }
+    finalSC.preparedSpellsCount = this.parent.items.filter(x => x.type === "spell"
+    && x.system?.level > 0
+    && x.system?.sourceClass === this.system.identifier
+    && x.system?.preparation?.mode === "prepared"
+    && x.system?.preparation?.prepared).length;
 
     // Temp method for determining spellcasting type until this data is available directly using advancement
     if ( CONFIG.DND5E.spellcastingTypes[finalSC.progression] ) finalSC.type = finalSC.progression;

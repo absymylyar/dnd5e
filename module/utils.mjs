@@ -225,6 +225,7 @@ export function linkForUuid(uuid, { tooltip }={}) {
   }
   const a = doc.toAnchor();
   if ( tooltip ) a.dataset.tooltip = tooltip;
+  if ( game.release.generation < 12 ) a.setAttribute("draggable", true);
   return a.outerHTML;
 }
 
@@ -706,6 +707,7 @@ function _synchronizeActorSpells(actor, spellsMap) {
     const {preparation, uses, save} = spell.toObject().system;
     Object.assign(spellData.system, {preparation, uses});
     spellData.system.save.dc = save.dc;
+    foundry.utils.setProperty(spellData, "_stats.compendiumSource", source.uuid);
     foundry.utils.setProperty(spellData, "flags.core.sourceId", source.uuid);
 
     // Record spells to be deleted and created

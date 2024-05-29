@@ -3,7 +3,7 @@
     {{#each spellcasting}}
     <div class="spellcasting card {{#if primary}}primary{{/if}}"
     data-ability="{{ ability.ability }}"
-    data-spell-origin="{{ spellCastingOrigin }}"
+    data-source-class="{{ sourceClass }}"
     data-prep-valid="{{ valid }}">
         <div class="header">
             <h3>{{ label }}</h3>
@@ -107,6 +107,7 @@
                 <li class="item" data-item-id="{{ item.id }}" data-entry-id="{{ item.id }}"
                     data-item-level="{{ item.system.level }}"
                     data-item-name="{{ item.name }}" data-item-sort="{{ item.sort }}"
+                    data-item-active="{{ item.isActiveSpellCasting }}"
                     data-item-preparation-mode="{{ item.system.preparation.mode }}"
                     data-item-preparation-prepared="{{ item.system.preparation.prepared }}">
 
