@@ -1,4 +1,17 @@
 /**
+ * Sort constants
+ */
+const sortIcons = {
+  a: "fa-arrow-down-a-z",
+  p: "fa-arrow-down-1-9",
+  m: "fa-arrow-down-short-wide"
+};
+const sortLocalisations = {
+  a: "Alpha",
+  p: "Priority",
+  m: "Manual"
+};
+/**
  * A custom element that encapsulates functionality for sorting, filtering, searching, and grouping lists of items.
  */
 export default class ItemListControlsElement extends HTMLElement {
